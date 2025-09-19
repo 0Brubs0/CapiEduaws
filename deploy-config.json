@@ -1,0 +1,11 @@
+{
+  "bucket_name": "capiedu-app",
+  "region": "us-east-1",
+  "files_to_upload": [
+    "index.html",
+    "style.css", 
+    "script.js",
+    "test.html",
+    "tests.js"
+  ]
+}

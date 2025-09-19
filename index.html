@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🦫 CapiEdu - Projetos Educacionais</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="bolhinhas"></div>
+    
+    <!-- Seção de Login/Cadastro -->
+    <section id="login-section">
+        <div class="login-container">
+            <h2>🦫 Bem-vindo ao CapiEdu</h2>
+            <div class="login-tabs">
+                <button id="tab-estudante" class="tab-btn active">👨‍🎓 Estudante</button>
+                <button id="tab-instituicao" class="tab-btn">🏢 Instituição</button>
+            </div>
+            
+            <form id="form-estudante" class="login-form">
+                <h3>Login de Estudante</h3>
+                <input type="text" id="nome-estudante" placeholder="Nome completo" required>
+                <input type="email" id="email-estudante" placeholder="Email (gmail, hotmail, etc)" required>
+                <button type="submit">🦫 Entrar</button>
+            </form>
+            
+            <form id="form-instituicao" class="login-form" style="display: none;">
+                <h3>Login de Instituição</h3>
+                <input type="text" id="nome-instituicao" placeholder="Nome da instituição" required>
+                <input type="text" id="cnpj-instituicao" placeholder="CNPJ (apenas números)" required>
+                <input type="email" id="email-instituicao" placeholder="Email (gmail, hotmail, etc)" required>
+                <button type="submit">🏢 Entrar</button>
+            </form>
+        </div>
+    </section>
+    
+    <header style="display: none;">
+        <h1>🦫 CapiEdu 🦫</h1>
+        <p>Capivaras conectando estudantes a projetos educacionais locais</p>
+    </header>
+
+    <nav style="display: none;">
+        <button id="btn-estudante" class="active">🦫 Ver Projetos</button>
+        <button id="btn-instituicao">🎓 Cadastrar Projeto</button>
+        <button id="btn-gerenciar">⚙️ Gerenciar Projetos</button>
+        <button id="btn-inscricoes">📋 Minhas Inscrições</button>
+        <button id="btn-logout">🚪 Sair</button>
+    </nav>
+
+    <main style="display: none;">
+        <!-- Seção para estudantes -->
+        <section id="estudante-section">
+            <div class="filtros">
+                <input type="text" id="cidade-filtro" placeholder="Digite sua cidade">
+                <select id="categoria-filtro">
+                    <option value="">Todas as categorias</option>
+                    <option value="curso">Curso</option>
+                    <option value="workshop">Workshop</option>
+                    <option value="projeto">Projeto</option>
+                </select>
+                <button onclick="filtrarProjetos()">Buscar</button>
+            </div>
+            <div id="projetos-lista"></div>
+        </section>
+
+        <!-- Seção para instituições -->
+        <section id="instituicao-section" style="display: none;">
+            <form id="projeto-form">
+                <h2>🦫 Cadastrar Novo Projeto Educacional</h2>
+                <input type="text" id="nome-projeto" placeholder="Nome do projeto" required>
+                <input type="text" id="instituicao" placeholder="Nome da instituição" required>
+                <select id="categoria" required>
+                    <option value="">Selecione a categoria</option>
+                    <option value="curso">Curso</option>
+                    <option value="workshop">Workshop</option>
+                    <option value="projeto">Projeto</option>
+                </select>
+                <input type="text" id="cidade" placeholder="Cidade" required>
+                <textarea id="descricao" placeholder="Descrição do projeto" required></textarea>
+                <input type="date" id="data-inicio" required>
+                <input type="email" id="contato" placeholder="Email para contato" required>
+                <button type="submit">Cadastrar Projeto</button>
+            </form>
+        </section>
+        <!-- Seção para inscrições do usuário -->
+        <section id="inscricoes-section" style="display: none;">
+            <h2>📋 Minhas Inscrições</h2>
+            <div id="inscricoes-lista"></div>
+        </section>
+
+        <!-- Seção para gerenciar projetos -->
+        <section id="gerenciar-section" style="display: none;">
+            <h2>⚙️ Gerenciar Projetos</h2>
+            <div id="projetos-gerenciar"></div>
+        </section>
+    </main>
+
+    <div class="capivara-fofa">🦫</div>
+    <script src="script.js"></script>
+</body>
+</html>

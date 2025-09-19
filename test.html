@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🦫 Testes CapiEdu</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+        .test-container { background: white; padding: 20px; margin: 10px 0; border-radius: 10px; }
+        .test-pass { border-left: 5px solid #4CAF50; }
+        .test-fail { border-left: 5px solid #f44336; }
+        .test-title { font-weight: bold; margin-bottom: 10px; }
+        .test-result { margin: 5px 0; }
+        button { padding: 10px 20px; margin: 5px; border: none; border-radius: 5px; cursor: pointer; }
+        .run-tests { background: #2196F3; color: white; }
+    </style>
+</head>
+<body>
+    <h1>🦫 Testes da Aplicação CapiEdu</h1>
+    <button class="run-tests" onclick="executarTodos()">Executar Todos os Testes</button>
+    <div id="resultados"></div>
+
+    <script>
+        // Simular funções da aplicação para teste
+        function validarCNPJ(cnpj) {
+            cnpj = cnpj.replace(/\D/g, '');
+            return cnpj.length === 14;
+        }
+
+        function criarProjeto(nome, instituicao, categoria, cidade, descricao, dataInicio, contato) {
+            if (!nome || !instituicao || !categoria || !cidade || !descricao || !dataInicio || !contato) {
+                return null;
+            }
+            return {
+                id: Date.now(),
+                nome, instituicao, categoria, cidade: cidade.toLowerCase(), 
+                descricao, dataInicio, contato
+            };
+        }
+
+        function filtrarPorCidade(projetos, cidade) {
+            if (!cidade) return projetos;
+            return projetos.filter(p => p.cidade.includes(cidade.toLowerCase()));
+        }
+
+        function filtrarPorCategoria(projetos, categoria) {
+            if (!categoria) return projetos;
+            return projetos.filter(p => p.categoria === categoria);
+        }
+
+        // Testes
+        const testes = [
+            {
+                nome: "Validação de CNPJ",
+                funcao: () => {
+                    const resultados = [];
+                    resultados.push(validarCNPJ("12345678901234") === true ? "✅ CNPJ válido aceito" : "❌ CNPJ válido rejeitado");
+                    resultados.push(validarCNPJ("123456789") === false ? "✅ CNPJ inválido rejeitado" : "❌ CNPJ inválido aceito");
+                    resultados.push(validarCNPJ("12.345.678/0001-34") === true ? "✅ CNPJ com formatação aceito" : "❌ CNPJ com formatação rejeitado");
+                    return resultados;
+                }
+            },
+            {
+                nome: "Criação de Projeto",
+                funcao: () => {
+                    const resultados = [];
+                    const projeto = criarProjeto("Curso Python", "UFSC", "curso", "Florianópolis", "Curso básico", "2024-01-01", "contato@ufsc.br");
+                    resultados.push(projeto !== null ? "✅ Projeto criado com dados válidos" : "❌ Falha ao criar projeto válido");
+                    
+                    const projetoInvalido = criarProjeto("", "UFSC", "curso", "Florianópolis", "Curso básico", "2024-01-01", "contato@ufsc.br");
+                    resultados.push(projetoInvalido === null ? "✅ Projeto inválido rejeitado" : "❌ Projeto inválido aceito");
+                    
+                    if (projeto) {
+                        resultados.push(projeto.cidade === "florianópolis" ? "✅ Cidade convertida para minúscula" : "❌ Cidade não convertida");
+                    }
+                    return resultados;
+                }
+            },
+            {
+                nome: "Filtros de Busca",
+                funcao: () => {
+                    const resultados = [];
+                    const projetos = [
+                        { nome: "Curso A", cidade: "florianópolis", categoria: "curso" },
+                        { nome: "Workshop B", cidade: "são paulo", categoria: "workshop" },
+                        { nome: "Curso C", cidade: "florianópolis", categoria: "curso" }
+                    ];
+                    
+                    const porCidade = filtrarPorCidade(projetos, "florianópolis");
+                    resultados.push(porCidade.length === 2 ? "✅ Filtro por cidade funcionando" : "❌ Filtro por cidade com erro");
+                    
+                    const porCategoria = filtrarPorCategoria(projetos, "curso");
+                    resultados.push(porCategoria.length === 2 ? "✅ Filtro por categoria funcionando" : "❌ Filtro por categoria com erro");
+                    
+                    const semFiltro = filtrarPorCidade(projetos, "");
+                    resultados.push(semFiltro.length === 3 ? "✅ Sem filtro retorna todos" : "❌ Sem filtro com erro");
+                    
+                    return resultados;
+                }
+            },
+            {
+                nome: "Validação de Email",
+                funcao: () => {
+                    const resultados = [];
+                    const emailValido = "teste@gmail.com";
+                    const emailInvalido = "email-invalido";
+                    
+                    const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    resultados.push(regexEmail.test(emailValido) ? "✅ Email válido aceito" : "❌ Email válido rejeitado");
+                    resultados.push(!regexEmail.test(emailInvalido) ? "✅ Email inválido rejeitado" : "❌ Email inválido aceito");
+                    
+                    return resultados;
+                }
+            },
+            {
+                nome: "LocalStorage",
+                funcao: () => {
+                    const resultados = [];
+                    try {
+                        // Teste de escrita
+                        localStorage.setItem('teste', 'valor');
+                        const valor = localStorage.getItem('teste');
+                        resultados.push(valor === 'valor' ? "✅ LocalStorage funcionando" : "❌ LocalStorage com erro");
+                        
+                        // Teste de JSON
+                        const obj = { nome: "Teste", id: 123 };
+                        localStorage.setItem('testeObj', JSON.stringify(obj));
+                        const objRecuperado = JSON.parse(localStorage.getItem('testeObj'));
+                        resultados.push(objRecuperado.nome === "Teste" ? "✅ JSON no LocalStorage funcionando" : "❌ JSON no LocalStorage com erro");
+                        
+                        // Limpeza
+                        localStorage.removeItem('teste');
+                        localStorage.removeItem('testeObj');
+                        
+                    } catch (e) {
+                        resultados.push("❌ LocalStorage não disponível");
+                    }
+                    return resultados;
+                }
+            }
+        ];
+
+        function executarTeste(teste) {
+            const container = document.createElement('div');
+            container.className = 'test-container';
+            
+            try {
+                const resultados = teste.funcao();
+                const passou = resultados.every(r => r.startsWith('✅'));
+                container.classList.add(passou ? 'test-pass' : 'test-fail');
+                
+                container.innerHTML = `
+                    <div class="test-title">🦫 ${teste.nome} ${passou ? '✅ PASSOU' : '❌ FALHOU'}</div>
+                    ${resultados.map(r => `<div class="test-result">${r}</div>`).join('')}
+                `;
+            } catch (error) {
+                container.classList.add('test-fail');
+                container.innerHTML = `
+                    <div class="test-title">🦫 ${teste.nome} ❌ ERRO</div>
+                    <div class="test-result">❌ Erro: ${error.message}</div>
+                `;
+            }
+            
+            return container;
+        }
+
+        function executarTodos() {
+            const resultados = document.getElementById('resultados');
+            resultados.innerHTML = '';
+            
+            let passou = 0;
+            let total = testes.length;
+            
+            testes.forEach(teste => {
+                const resultado = executarTeste(teste);
+                if (resultado.classList.contains('test-pass')) passou++;
+                resultados.appendChild(resultado);
+            });
+            
+            // Resumo
+            const resumo = document.createElement('div');
+            resumo.className = `test-container ${passou === total ? 'test-pass' : 'test-fail'}`;
+            resumo.innerHTML = `
+                <div class="test-title">🦫 RESUMO DOS TESTES</div>
+                <div class="test-result">✅ Passou: ${passou}/${total}</div>
+                <div class="test-result">❌ Falhou: ${total - passou}/${total}</div>
+                <div class="test-result">${passou === total ? '🎉 Todos os testes passaram!' : '⚠️ Alguns testes falharam'}</div>
+            `;
+            resultados.insertBefore(resumo, resultados.firstChild);
+        }
+
+        // Executar automaticamente ao carregar
+        window.onload = () => executarTodos();
+    </script>
+</body>
+</html>
