@@ -78,6 +78,74 @@ novoprojeto-bruna/
 
 ## ☁️ Arquitetura AWS
 
+### 📊 Diagrama de Arquitetura
+
+```mermaid
+graph TB
+    %% Usuários
+    U1[👨🎓 Estudantes] 
+    U2[🏢 Instituições]
+    
+    %% Internet e CDN
+    Internet[🌐 Internet]
+    CF[☁️ CloudFront<br/>CDN Global]
+    
+    %% Frontend
+    S3[📦 S3 Bucket<br/>Website Estático<br/>HTML, CSS, JS]
+    
+    %% DNS
+    R53[🌍 Route 53<br/>DNS]
+    
+    %% Backend Services
+    APIGW[🚪 API Gateway<br/>REST Endpoints]
+    Lambda[⚡ Lambda Functions<br/>- Projetos CRUD<br/>- Usuários CRUD<br/>- Inscrições]
+    
+    %% Database
+    DDB[🗄️ DynamoDB<br/>- Projetos<br/>- Usuários<br/>- Inscrições]
+    
+    %% Authentication
+    Cognito[🔐 Cognito<br/>User Pools<br/>Autenticação]
+    
+    %% Communication
+    SES[📧 SES<br/>Email Service<br/>Notificações]
+    SNS[📱 SNS<br/>Push Notifications]
+    
+    %% Monitoring
+    CW[📊 CloudWatch<br/>Logs & Métricas]
+    XRay[🔍 X-Ray<br/>Tracing]
+    
+    %% Connections
+    U1 --> Internet
+    U2 --> Internet
+    Internet --> R53
+    R53 --> CF
+    CF --> S3
+    
+    S3 --> APIGW
+    APIGW --> Lambda
+    Lambda --> DDB
+    Lambda --> Cognito
+    Lambda --> SES
+    Lambda --> SNS
+    
+    Lambda --> CW
+    Lambda --> XRay
+    APIGW --> CW
+    
+    %% Styling
+    classDef frontend fill:#e1f5fe
+    classDef backend fill:#f3e5f5
+    classDef database fill:#e8f5e8
+    classDef monitoring fill:#fff3e0
+    classDef communication fill:#fce4ec
+    
+    class S3,CF,R53 frontend
+    class APIGW,Lambda,Cognito backend
+    class DDB database
+    class CW,XRay monitoring
+    class SES,SNS communication
+```
+
 ### 🏗️ Serviços Utilizados
 
 #### **Frontend**
@@ -136,6 +204,45 @@ novoprojeto-bruna/
 - **Segurança**: Autenticação robusta e criptografia
 - **Custo-efetivo**: Paga apenas pelo que usar
 - **Manutenção zero**: Serverless elimina gerenciamento de servidor
+
+## 🚀 Deploy na AWS
+
+### Pré-requisitos
+- AWS CLI instalado e configurado
+- Conta AWS ativa
+- Permissões para S3, CloudFront e Route 53
+
+### Scripts Disponíveis
+
+#### Deploy Completo (S3 + CloudFront)
+```bash
+./deploy-aws.sh
+```
+- Cria bucket S3
+- Configura website estático
+- Upload dos arquivos
+- Cria distribuição CloudFront
+- Configura cache e SSL
+
+#### Deploy Simples (Apenas S3)
+```bash
+./deploy-simple.sh
+```
+- Deploy rápido apenas com S3
+- Ideal para testes
+
+#### Limpeza de Recursos
+```bash
+./cleanup-aws.sh
+```
+- Remove buckets e arquivos
+- Evita custos desnecessários
+
+### Após o Deploy
+1. Acesse a URL fornecida pelo script
+2. Teste todas as funcionalidades
+3. Configure domínio customizado (opcional)
+4. Configure monitoramento no CloudWatch
 
 ---
 
