@@ -244,6 +244,8 @@ graph TB
 3. Configure domínio customizado (opcional)
 4. Configure monitoramento no CloudWatch
 
+tag:  q-developer-quest-tdc-2025
+
 ---
 
 Feito com 🦫 e muito carinho!
